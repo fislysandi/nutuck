@@ -1,6 +1,6 @@
 # Nutuck
 
-A pure Nushell implementation of a "Tuckr-like" dotfile manager.
+A pure Nushell implementation of a "Tuckr-like" https://github.com/RaphGL/tuckr dotfile manager.
 
 ## 1. Overview
 Nutuck is a lightweight, dependency-free (other than Nushell) dotfile manager designed for cross-platform environments. It manages symbolic links between your dotfiles repository and your system's configuration paths.
