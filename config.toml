@@ -1,0 +1,10 @@
+# Nutuck Configuration
+
+# mode: "git" or "path"
+# - git: assumes nutuck is inside the dotfiles repo (in a subdirectory), looks for Configs/ in the parent directory.
+# - path: uses the explicit 'config_path' defined below.
+mode = "git"
+
+# config_path: absolute path to your dotfiles root (containing the Configs/ folder)
+# Only used if mode = "path"
+config_path = ""

@@ -1,0 +1,6 @@
+[package]
+name = "nutuck"
+version = "1.2.0"
+description = "Pure Nushell dotfile linker"
+license = "MIT"
+type = "module"
