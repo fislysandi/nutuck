@@ -24,8 +24,9 @@ When a user asks to configure a tool that has different paths on different OSs (
 ### How to identify variables
 1.  **Read** files in `nutuck/Applications/`.
 2.  Look for the JSON output structure.
-    -   Example: `Applications/vscode.nu` returns `{ "CODE_USER": "..." }`.
-3.  The variable name to use in the folder structure is `%CODE_USER%`.
+    - Example: `Applications/vscode.nu` returns `{ "CODE_USER": "..." }`.
+3. The variable name to use in the folder structure is `%CODE_USER%`.
+4. For tools with platform-specific paths, create or use an appropriate variable.
 
 ### How to add new variables
 If a supported tool is missing (e.g., "Obsidian"):

@@ -7,9 +7,10 @@ Nutuck is a lightweight, dependency-free (other than Nushell) dotfile manager de
 
 **Key Features:**
 - **Zero Dependencies**: Written entirely in Nushell.
-- **Cross-Platform**: Works on Windows (requires Admin), macOS, and Linux.
-- **Smart Variables**: Uses `%VARIABLE%` syntax in directory names to map to dynamic, OS-specific paths (e.g., `%APPDATA%`, `%CODE_USER%`).
+- **Cross-Platform**: Works on Windows, macOS, and Linux.
+- **Smart Variables**: Uses `%VARIABLE%` syntax in directory names to map to dynamic, OS-specific paths (for example `%APPDATA%`, `%CODE_USER%`).
 - **Conditional Packages**: Automatically filters packages based on OS suffixes (e.g., `_windows`, `_macos`).
+- **Hybrid Linking**: Prefers one safe directory symlink per app when a package maps cleanly to an app-specific target directory, and falls back to file links when parents are shared.
 - **Plugin System**: Extensible variable definitions via simple Nushell scripts in `Applications/`.
 
 ## 2. Directory Structure
@@ -36,7 +37,7 @@ The repository relies on a specific structure relative to the `nutuck` script:
 
 ### Prerequisites
 - **Nushell** must be installed and in your PATH.
-- **Windows Users**: You must run your terminal as **Administrator** or enable **Developer Mode** to create symbolic links.
+- **Windows Users**: Symlink creation may require **Developer Mode** or an elevated terminal, depending on your system policy. Nutuck does not block you up front; it reports link failures when the OS rejects them.
 
 ### Basic Commands
 Run the script from the root of your repository (or inside `nutuck/`):
@@ -79,6 +80,26 @@ If a tool lives in a weird location (like `%APPDATA%` on Windows vs `~/.config` 
 2.  Create a folder with the variable name wrapped in `%`.
     -   `Configs/vscode/%CODE_USER%/settings.json`
 3.  Nutuck will expand `%CODE_USER%` to the correct path for the current OS.
+
+### Directory Links vs File Links
+Nutuck now uses a hybrid policy:
+
+- It links a whole directory only when the package contents share one app-specific target directory under a known config root.
+- It falls back to file links when the shared parent is broad or shared, such as `~`, `~/.config`, `~/.local`, `~/.local/share`, `~/Library/Application Support`, `~/Library/Preferences`, `%APPDATA%`, or `%LOCALAPPDATA%`.
+
+Examples:
+
+- Directory link: `Configs/nushell/%NU_HOME%/` -> `%NU_HOME%`
+- Directory link: `Configs/vscode/%CODE_USER%/` -> `%CODE_USER%`
+- Directory link: `Configs/organize/.config/organize-py/` -> `~/.config/organize-py`
+- File links: `Configs/bash/.bashrc`, `Configs/git/.gitconfig`, `Configs/starship/.config/starship.toml`
+
+Package-level helper files such as `README.md` and `LICENSE` are ignored for linking so they do not block safe directory linking.
+
+### Overwrite Safety
+`--overwrite` replaces files and symlinks that block a managed target.
+
+It does **not** remove a real non-symlink directory, even for directory-link candidates. Clean those up manually first if you really want to replace them.
 
 ### OS-Specific Packages
 Suffix your package folder name to restrict it to an OS:
